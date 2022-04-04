@@ -7,6 +7,7 @@ public class ListaEncadeadaAD {
     }
 
     public ListaEncadeadaAD(NoAD pPrimeiro) {
+	    elemento = pPrimeiro;
     }
 
     private NoAD irAteFinal() {
