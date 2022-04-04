@@ -1,45 +1,118 @@
 public class ListaEncadeadaAD {
-    private NoAD primeiro;
-    private NoAD ultimo;
+    
+    private NoAD elemento;
 
     public ListaEncadeadaAD() {
-        this.primeiro = null;
-        this.ultimo = null;
+        elemento = null;
     }
+
     public ListaEncadeadaAD(NoAD pPrimeiro) {
-        this.primeiro = pPrimeiro;
-        this.ultimo = pPrimeiro;
     }
+
     private NoAD irAteFinal() {
-        NoAD ptrProximo = this.primeiro;
-        NoAD ultimo = null;
-        while (ptrProximo != null) {
-            ultimo = ptrProximo;
-            ptrProximo = ptrProximo.pegaProximo();
+        // o nó elemento indica onde o inicio da lista é, e ele é estatico (não vai mudar de pos)
+        // a var auxiliar é um ponteiro que vai navegar DENTRO da lista do elemento, e retornar oq
+        // vc quiser
+        NoAD auxiliar = elemento;
+
+        while (auxiliar.pegaProximo() != null) {
+            auxiliar = auxiliar.pegaProximo();
         }
-        return ultimo;
+        return auxiliar;
     }
-    private NoAD irAtePenultimo() {
-        NoAD ptrProximo = this.primeiro;
-        NoAD ultimo = null;
-        NoAD penultimo = null;
-        while (ptrProximo != null) {
-            penultimo = ultimo;
-            ultimo = ptrProximo;
-            ptrProximo = ptrProximo.pegaProximo();
-        }
-        return penultimo;
-    }
+
     private NoAD encontrar(NoAD pNo) {
-        NoAD ptrProximo = this.primeiro;
-        while ((ptrProximo != null)
-                && (ptrProximo.pegaDado() != pNo.pegaDado())) {
-            ptrProximo = ptrProximo.pegaProximo();
+        NoAD auxiliar = elemento;
+        while ((auxiliar != null) && (auxiliar.pegaDado() != pNo.pegaDado())) {
+            auxiliar = auxiliar.pegaProximo();
         }
-        return ptrProximo;
+        return auxiliar;
     }
+
+    public void imprimirInicio2Fim() {
+		NoAD auxiliar = elemento;
+		System.out.print('[');
+		while(auxiliar != null) {
+			System.out.print(auxiliar.pegaDado());
+			if(auxiliar.pegaProximo() != null) {
+				System.out.print(", ");
+			}
+			auxiliar = auxiliar.pegaProximo();
+		}
+		System.out.println(']');
+	}
+
+    public void imprimirFim2Inicio() {
+		NoAD auxiliar = elemento;
+		while(auxiliar.pegaProximo() != null) {
+			auxiliar = auxiliar.pegaProximo();
+		}
+		System.out.print('[');
+		while(auxiliar != null) {
+			System.out.print(auxiliar.pegaDado());
+			if(auxiliar.pegaAnterior() != null) {
+				System.out.print(", ");
+			}
+			auxiliar = auxiliar.pegaAnterior();
+		}
+		System.out.println(']');
+	}
+
+    public boolean inserePrimeiro(Integer i) {
+        boolean inserido = true;
+        if (elemento == null) {
+            elemento = new NoAD(i);
+            return inserido;
+        } 
+            NoAD auxiliar = new NoAD(i);
+            elemento.setaAnterior(auxiliar);
+            auxiliar.setaProximo(elemento);
+
+            // nesse final eu coloco elemento = auxiliar pro inicio da lista ficar apontado pro primeiro elemento
+            // lembrando que quando vc faz "elemento = auxiliar", o ponteiro do elemento é igual ao ponto do auxiliar
+            elemento = auxiliar;
+            return inserido;
+    }
+
+    public boolean insereUltimo(Integer i) {
+        boolean inserido = true;
+        if (elemento == null) {
+            elemento = new NoAD(i);
+            return inserido;
+        }
+        NoAD auxiliar = irAteFinal();
+        NoAD novoDado = new NoAD(i);
+
+        auxiliar.setaProximo(novoDado);
+        novoDado.setaAnterior(auxiliar);
+
+        return inserido;
+    }
+
+    public NoAD removePrimeiro() {
+        NoAD noAuxiliar = elemento;
+        if (elemento != null) {
+            elemento = elemento.pegaProximo();
+            elemento.setaAnterior(null);
+        }
+        return noAuxiliar;
+    }
+
+    public NoAD removeUltimo() {
+        if (elemento == null) {
+            return null;
+        }
+        NoAD auxiliar = irAteFinal();
+
+        auxiliar.pegaAnterior().setaProximo(null);
+        auxiliar.setaAnterior(null);
+
+        return auxiliar;
+    }
+
+    // usado no método insereOrdenado
     private NoAD encontrarAnteriorAoMaior(NoAD pNo) {
-        NoAD ptrProximo = this.primeiro;
+        NoAD ptrProximo = elemento;
         NoAD anterior = null;
         while ((ptrProximo != null)
                 && (ptrProximo.pegaDado() < pNo.pegaDado())) {
@@ -48,84 +121,7 @@ public class ListaEncadeadaAD {
         }
         return anterior;
     }
-    private NoAD encontrarAnterior(NoAD pNo) {
-        NoAD ptrProximo = this.primeiro;
-        NoAD anterior = null;
-        while ((ptrProximo != null) && (ptrProximo.pegaDado() != pNo.pegaDado())) {
-            anterior = ptrProximo;
-            ptrProximo = ptrProximo.pegaProximo();
-        }
-        return anterior;
-    }
-    public void imprimirInicio2Fim() {
-        NoAD ptrProximo = this.primeiro;
-        while (ptrProximo != null) {
-            System.out.println(ptrProximo.pegaDado());
-            ptrProximo = ptrProximo.pegaProximo();
-        }
-    }
-    public void imprimirFim2Inicio() {
-        NoAD ptrAnterior = this.ultimo;
-        while (ptrAnterior != null) {
-            System.out.println(ptrAnterior.pegaDado());
-            ptrAnterior = ptrAnterior.pegaAnterior();
-        }
-    }
-    public boolean inserePrimeiro(Integer i) {
-        NoAD no = new NoAD(i);
-        boolean inserido = false;
-        if (this.primeiro == null) {
-            this.primeiro = no;
-            inserido = true;
-        } else { // percorrer a lista até o último nó
-            NoAD primeiroElemento = this.primeiro;
-            primeiroElemento.setaAnterior(no);
-            inserido = true;
-        }
-        return inserido;
-    }
-    public boolean insereUltimo(Integer i) {
-        NoAD no = new NoAD(i);
-        boolean inserido = false;
-        if (this.primeiro == null) {
-            this.primeiro = no;
-            this.ultimo = no;
-            inserido = true;
-        } else { // percorrer a lista até o último nó
-            NoAD ultimoAD = irAteFinal();
-            if (ultimoAD != null) {
-                ultimoAD.setaAnterior(irAtePenultimo());
-                ultimoAD.setaProximo(no);
-                this.ultimo = no;
-                inserido = true;
-            }
-        }
-        return inserido;
-    }
-    public NoAD removePrimeiro() {
-        NoAD noAux = this.primeiro;
-        if (this.primeiro != null) {
-            this.primeiro = this.primeiro.pegaProximo();
-        }
-        return noAux;
-    }
-    public NoAD removeUltimo() {
-        if (this.primeiro == null) {
-            this.ultimo = null;
-        } else {
-            if (this.primeiro.pegaProximo() == null) {
-                this.ultimo = this.primeiro;
-                this.primeiro = null;
-            } else {
-                NoAD penultimoNo = irAtePenultimo();
-                if (penultimoNo != null) {
-                    this.ultimo = penultimoNo;
-                    penultimoNo.setaProximo(null);
-                }
-            }
-        }
-        return this.ultimo;
-    }
+
     public boolean insereOrdenado(Integer i) {
         NoAD no = new NoAD(i);
         NoAD noPosicaoAnteriorMaior = null;
@@ -141,34 +137,38 @@ public class ListaEncadeadaAD {
                 inserido = true;
             } else {
                 no.setaProximo(noPosicaoAnteriorMaior.pegaProximo());
+                no.setaAnterior(noPosicaoAnteriorMaior);
+                no.pegaProximo().setaAnterior(no);
                 noPosicaoAnteriorMaior.setaProximo(no);
                 inserido = true;
             }
         }
         return inserido;
     }
+
     public boolean insereDepois(NoAD pNo, Integer i) {
         NoAD no = new NoAD(i);
-        NoAD noDepois = null;
-        boolean inserido = false;
-        if (pNo != null) {
-            noDepois = this.encontrar(pNo);
-        }
-        if (noDepois != null) {
-            no.setaProximo(noDepois.pegaProximo());
+        boolean inserido = true;
+
+        if (elemento != null) {
+            NoAD noDepois = this.encontrar(pNo);
             no.setaAnterior(noDepois);
+            no.setaProximo(noDepois.pegaProximo());
             noDepois.setaProximo(no);
-            inserido = true;
+            no.pegaProximo().setaAnterior(no);
+        }else{
+            return !inserido; 
         }
         return inserido;
     }
+
     public NoAD remove(NoAD pNo) {
         NoAD anterior = null;
         NoAD removido = null;
-        if (this.primeiro == null) {
+        if (elemento == null) {
             removido = null;
         } else {
-            if ((this.primeiro != null) && (this.primeiro.pegaDado() ==
+            if ((elemento != null) && (elemento.pegaDado() ==
                     pNo.pegaDado())) {
                 removido = this.removePrimeiro();
             } else {
@@ -197,36 +197,10 @@ public class ListaEncadeadaAD {
         }
         return removido;
     }
-    public static void main(String[] args) {
-        NoAD n;
-        ListaEncadeadaAD lista = new ListaEncadeadaAD();
-        System.out.println("Inseriu Ultimo 10 ? " + lista.insereUltimo(10));
-        System.out.println("Inseriu Ultimo 11 ? " + lista.insereUltimo(11));
-        System.out.println("Inseriu Ultimo 12 ? " + lista.insereUltimo(12));
-        System.out.println("Inseriu Ultimo 12 ? " + lista.insereUltimo(100));
-        System.out.println("Inseriu Ultimo 13 ? " + lista.insereUltimo(13));
-        System.out.println("Inseriu Ultimo 14 ? " + lista.insereUltimo(14));
-        System.out.println("Inseriu Primeiro 9 ? " + lista.inserePrimeiro(9));
-        System.out.println("Inseriu Ultimo 16 ? " + lista.insereUltimo(16));
 
-        lista.imprimirInicio2Fim();
+    public void printAll(){
+        imprimirInicio2Fim();
+        imprimirFim2Inicio();
         System.out.println();
-        lista.imprimirFim2Inicio();
-
-        System.out.println("\nInseriu depois 14 -> 15 ? " +
-                lista.insereDepois(new NoAD(14), 15));
-
-        System.out.println("Remove 10 ? " +
-                ((n = lista.remove(new NoAD(10))) != null ? n.pegaDado() : false));
-        System.out.println("Remove 100 ? " +
-                ((n = lista.remove(new NoAD(100))) != null ? n.pegaDado() : false));
-        System.out.println("Remove ultimo ? " +
-                ((n = lista.removeUltimo()) != null ? n.pegaDado() : false));
-        System.out.println("Remove primeiro ? " +
-                ((n = lista.removePrimeiro()) != null ? n.pegaDado() : false));
-
-        lista.imprimirInicio2Fim();
-        System.out.println();
-        lista.imprimirFim2Inicio();
     }
 }
