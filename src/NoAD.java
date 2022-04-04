@@ -14,7 +14,7 @@ public class NoAD {
         this.proximo = null;
         this.anterior = null;
     }
-
+    
     public Integer pegaDado(){
         return this.dado;
     }
