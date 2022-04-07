@@ -1,3 +1,5 @@
+package model;
+
 public class NoAD {
     private Integer dado;
     private NoAD proximo;

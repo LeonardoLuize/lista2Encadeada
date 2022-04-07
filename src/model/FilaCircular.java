@@ -1,44 +1,42 @@
+package model;
+
 import java.util.Arrays;
 
-public class filaCircular {
+public class FilaCircular {
     private int primeiro;
     private int tamanho;
-    private int n;
+    private int numeroDados;
     private int[] dados;
 
-    public filaCircular(int tamanho){
+    public FilaCircular(int tamanho){
         this.primeiro = 0;
-        this.n = 0;
+        this.numeroDados = 0;
         this.tamanho = tamanho;
         this.dados = new int[tamanho];
     }
 
-    public boolean insere(int e){
-        if(n < this.tamanho){
-            int fim = (this.primeiro + n) % this.tamanho;
+    public boolean inserir(int e){
+        if(numeroDados < this.tamanho){
+            int fim = (this.primeiro + numeroDados) % this.tamanho;
             this.dados[fim] = e;
-            this.n++;
-
+            this.numeroDados++;
             return true;
         }
 
         return false;
     }
 
-    public boolean remove(){
-        if(n > 0){
+    public boolean remover(){
+        if(numeroDados > 0){
             primeiro = (this.primeiro) % this.tamanho;
-            n--;
-
-            this.dados[n] = 0;
-
+            numeroDados--;
+            this.dados[numeroDados] = 0;
             return true;
         }
-
         return false;
     }
 
-    public void printElementos(){
+    public void imprimir(){
         System.out.println(Arrays.toString(dados));
     }
 
